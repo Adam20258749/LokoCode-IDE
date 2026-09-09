@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  username     String         @unique
+  password     String
+  avatar       String?
+  plan         String         @default("free")
+  role         String         @default("user")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  workspaces   Workspace[]
+  projects     Project[]
+  apiKeys      ApiKey[]
+  aiConversations AiConversation[]
+}
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  type      String   @default("personal")
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  projects  Project[]
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id           String   @id @default(uuid())
+  name         String
+  language     String   @default("javascript")
+  workspaceId  String
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  ownerId      String
+  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  gitRepo      String?
+  storageUsed  Int      @default(0)
+  lastModified DateTime @default(now())
+  files        File[]
+  createdAt    DateTime @default(now())
+}
+
+model File {
+  id        String   @id @default(uuid())
+  name      String
+  path      String
+  content   String   @default("")
+  type      String   @default("file")
+  parentId  String?
+  parent    File?    @relation("FileTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children  File[]   @relation("FileTree")
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  provider  String
+  keyHint   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model AiConversation {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String   @default("New Chat")
+  messages  Json     @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: lokocode
+      POSTGRES_PASSWORD: lokocode_dev
+      POSTGRES_DB: lokocode
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lokocode"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  server:
+    image: node:22-bookworm
+    working_dir: /app/server
+    command: sh -c "npm install && npx prisma generate && npx prisma db push && npx tsx watch src/index.ts"
+    environment:
+      - DATABASE_URL=postgresql://lokocode:lokocode_dev@db:5432/lokocode
+      - JWT_SECRET=${JWT_SECRET:-dev_jwt_secret_change_me}
+      - PORT=3001
+      - CLIENT_ORIGIN=https://3000-${BASE44_PUBLIC_HOST_SUFFIX}
+    volumes:
+      - ./:/app
+      - /app/server/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+
+  client:
+    image: node:22-slim
+    working_dir: /app/client
+    command: sh -c "npm install && npx vite --host 0.0.0.0 --port 5173"
+    environment:
+      - VITE_API_URL=https://3001-${BASE44_PUBLIC_HOST_SUFFIX}
+      - __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
+    volumes:
+      - ./:/app
+      - /app/client/node_modules
+    ports:
+      - "3000:5173"
+    depends_on:
+      - server
+
+volumes:
+  pgdata:

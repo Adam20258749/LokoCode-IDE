@@ -1,1 +1,1 @@
-# LokoCode
+# LokoCode IDE

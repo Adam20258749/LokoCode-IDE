@@ -1,0 +1,53 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "JWT_SECRET",
+      "description": "Secret key used to sign JWT authentication tokens. Generate a random 64+ character string.",
+      "requiredAtBoot": true,
+      "generatedForDevelopment": true
+    },
+    {
+      "name": "STRIPE_SECRET_KEY",
+      "description": "Stripe API secret key (sk_test_...) for subscription billing. Obtain from https://dashboard.stripe.com/apikeys",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "STRIPE_WEBHOOK_SECRET",
+      "description": "Stripe webhook signing secret (whsec_...) for verifying webhook events. Obtain from Stripe dashboard webhooks settings.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "OPENAI_API_KEY",
+      "description": "OpenAI API key for AI assistant/agent features. Obtain from https://platform.openai.com/api-keys",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "ANTHROPIC_API_KEY",
+      "description": "Anthropic (Claude) API key for AI features. Obtain from https://console.anthropic.com/",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "GITHUB_CLIENT_ID",
+      "description": "GitHub OAuth app client ID for GitHub login & Git integration. Create at https://github.com/settings/developers",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "GITHUB_CLIENT_SECRET",
+      "description": "GitHub OAuth app client secret. Create at https://github.com/settings/developers",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "GOOGLE_CLIENT_ID",
+      "description": "Google OAuth client ID for Google login. Create at https://console.cloud.google.com/apis/credentials",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "GOOGLE_CLIENT_SECRET",
+      "description": "Google OAuth client secret. Create at https://console.cloud.google.com/apis/credentials",
+      "requiredAtBoot": false
+    }
+  ]
+}

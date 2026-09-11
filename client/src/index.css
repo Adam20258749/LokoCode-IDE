@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #ffffff;
+    --bg-2: #f8f9fa;
+    --bg-3: #f0f1f3;
+    --border: #e2e5e9;
+    --text: #1a1a1a;
+    --text-2: #6b7280;
+    --text-3: #9ca3af;
+    --accent: #3377ff;
+  }
+  .dark {
+    --bg: #0d0f14;
+    --bg-2: #14171f;
+    --bg-3: #1a1e28;
+    --border: #252a36;
+    --text: #e4e7ec;
+    --text-2: #8b909a;
+    --text-3: #5c6370;
+    --accent: #3377ff;
+  }
+  * { border-color: var(--border); }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .bg-app { background: var(--bg); }
+  .bg-2 { background: var(--bg-2); }
+  .bg-3 { background: var(--bg-3); }
+  .text-main { color: var(--text); }
+  .text-2 { color: var(--text-2); }
+  .text-3 { color: var(--text-3); }
+  .border-app { border-color: var(--border); }
+  .text-accent { color: var(--accent); }
+  .bg-accent { background: var(--accent); }
+
+  .btn {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-500;
+  }
+  .btn-ghost {
+    @apply btn text-2 hover:bg-3;
+  }
+  .btn-outline {
+    @apply btn border border-app text-main hover:bg-3;
+  }
+  .input {
+    @apply w-full px-3 py-2 rounded-lg bg-3 border border-app text-main text-sm outline-none focus:border-brand-500 transition-colors;
+  }
+  .card {
+    @apply bg-2 border border-app rounded-xl;
+  }
+  .sidebar-icon {
+    @apply w-12 h-12 flex items-center justify-center text-2 hover:text-main hover:bg-3 transition-colors cursor-pointer relative;
+  }
+  .sidebar-icon.active {
+    @apply text-main bg-3;
+  }
+  .sidebar-icon.active::before {
+    content: '';
+    @apply absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-brand-500;
+  }
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* Monaco container */
+.monaco-editor, .monaco-editor .margin, .monaco-editor .monaco-editor-background {
+  background: var(--bg) !important;
+}
